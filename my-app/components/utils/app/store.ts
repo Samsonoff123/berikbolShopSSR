@@ -1,12 +1,11 @@
 import { userAPI } from './../slice/userService';
-import { configureStore } from '@reduxjs/toolkit'
-import userReducer from '../slice/posts'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { cartReducer } from '../slice/cart.slice'
 
-
-const store = configureStore({
-    reducer: {
-        [userAPI.reducerPath]: userAPI.reducer
-    }
+export const store = configureStore({
+    reducer: { [userAPI.reducerPath] : userAPI.reducer, cart: cartReducer},
+    middleware: getDefaultMiddleware =>
+        getDefaultMiddleware().concat(userAPI.middleware)
 })
 
-export default store
+export type TypeRootState = ReturnType<typeof store.getState>

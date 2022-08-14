@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import Header from "../components/Header/index";
 import { Button, Checkbox, Form, Input } from "antd";
-import { userAPI } from "../components/utils/slice/userService";
 import { useRouter } from "next/router";
 
 type Props = {
@@ -20,17 +19,34 @@ interface FilterUsers {
 export default function Login({users}:Props) {
 
     const router = useRouter()
+    const ref = useRef<HTMLHeadingElement>(null);
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
+    let valid = 0
     users.map((e: FilterUsers, id: number) => {
         if(e.email === values.username) {
             if(e.password === values.password) {
                 localStorage.setItem('id', id.toString())
                 router.push('/')
+
+                valid = 0
             }
+        } else {
+          valid++
         }
     })
+    if (valid === users.length) {
+      if(ref.current) {
+        ref.current.style.border = "1px solid red" 
+        alert('Access denied!')
+      }   
+    } else {
+      if(ref.current) {
+        ref.current.style.border = "none" 
+      } 
+    }
+  
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -38,7 +54,7 @@ export default function Login({users}:Props) {
   };
   return (
     <Header>
-      <div className="form">
+      <div className="form" ref = { ref }>
         <h3>Login</h3>
         <Form
           name="basic"

@@ -91,7 +91,18 @@ a {
     position: relative;
     width: 100%;
     display: flex;
-    span {
+    &:hover {
+      .allready {
+        display: block;
+      }
+    }
+    .allready {
+      display: none;
+      position: absolute;
+      right: 20px;
+      top: -10px;
+    }
+    .anticon-shopping-cart {
       display: none;
       position: absolute;
       right: 20px;
@@ -152,5 +163,42 @@ a {
     text-align: center;
     padding-bottom: 10px;
     padding-left: 50px;
+  }
+}
+
+.profile__group {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.detail__main {
+  display: flex;
+  gap: 20px;
+  background-color: #FFF9CA;
+  border-radius: 25px;
+  overflow: hidden;
+  img {
+    width: 500px;
+  }
+  .discribtion {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    .title {
+      font-size: 20px;
+    }
+    .price {
+      font-size: 20px;
+    }
+  }
+}
+
+.cart__group {
+  display: flex;
+  gap: 15px;
+  svg {
+    cursor: pointer;
   }
 }

@@ -1,14 +1,13 @@
 import Header from "../components/Header/index";
 import React, { useState } from "react";
-import { ShoppingCartOutlined } from "@ant-design/icons";
-import { StarOutlined } from "@ant-design/icons";
-import { Select } from 'antd';
-
-const { Option } = Select;
+import { useActions } from "../components/utils/hooks/useActions";
+import { useTypedSelector } from "../components/utils/hooks/useTypedSelector";
+import PostFull from '../components/PostFull'
+import Filter from '../components/Filter'
 
 type Props = {
     products: any;
-    categories: [];
+    categories: []
 };
 
 interface FilterProducts {
@@ -28,40 +27,17 @@ interface FiltersProps {
   filters: FilterProducts[];
 }
 
-export default function Posts({ products, categories }: Props) {
-    const [value, setValue] = useState('electronics')
+export default function Posts({ products, categories}: Props) {
+
+  const [value, setValue] = useState('electronics')
     
   return (
     <Header>
         <>
-        <Select defaultValue={value} style={{ maxWidth: 220, width: '100%', marginBottom: 20 }} onChange={(event)=>setValue(event)}>
-            {categories.map((e, id) => 
-                <Option value={e} key={id}>{e}</Option >
-            )}
-        </Select>
+        <Filter categories={categories} value={value} set={(event) => setValue(event)} />
         <div className="posts__main">
             {products.map((e: FilterProducts) =>
-            (e.category == value) 
-                ?<div className="postMain" key={e.id}>
-                <div className="img__div">
-                    <ShoppingCartOutlined />
-                    <div className="price">{e.price} $</div>
-                    <img className="postImage" src={e.image} alt="postIMG" />
-                </div>
-                <div className="description">
-                    <div className="raiting">
-                    <span className="count">count - {e.rating.count}</span>
-                    <div className="rate">
-                        <StarOutlined /> - {e.rating.rate}
-                    </div>
-                    </div>
-                    <span>
-                    <b>{e.title}</b>
-                    </span>
-                    <span>{e.description}</span>
-                </div>
-                </div>
-                : null
+              <PostFull product={e} value={value} />
             )}
         </div>
       </>
@@ -79,5 +55,6 @@ export const getStaticProps = async () => {
   return {
     props: { products, categories },
   };
+
 };
 
