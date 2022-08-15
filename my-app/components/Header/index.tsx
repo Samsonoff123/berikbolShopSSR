@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button } from 'antd'
 import { PoweroffOutlined, UserOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import Container from '../Container/index'
@@ -20,8 +20,12 @@ export default function index({children}: Props) {
 
     const router = useRouter()
 
+    const ref = useRef<HTMLHeadingElement>(null);
+    const dark = useRef<HTMLHeadingElement>(null);
+
     const [isAuth, setIsAuth] = useState(false)
     const [visible, setVisible] = useState(false);
+    const [changeLogo, setChangeLogo] = useState(false)
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [profile, setProfile] = useState({
         email: '',
@@ -36,23 +40,62 @@ export default function index({children}: Props) {
         },
     })
 
+    function parseJwt (token:any) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+  
+      return JSON.parse(jsonPayload);
+    }
+
     useEffect(() => {
         if(users) {
-            const item = localStorage.getItem('id')
+            const item = localStorage.getItem('token')
         
             if(item !== null) {
+                
                 setIsAuth(true)
                 setProfile(users[+item])
+                users.forEach(e=> {
+                  if(e.username === parseJwt(item).user) {
+                    setProfile(e)
+                  }
+                })
             }
         }
 
     }, [users])
 
     const logOut = () => {
-        localStorage.removeItem('id')
+        localStorage.removeItem('token')
         setIsAuth(false)
         router.push('/Login')
     }
+
+    const burger = (event: any) => {
+      event.stopPropagation()
+      event.target.classList.toggle('active')
+      ref.current?.classList.toggle('active')
+      dark.current?.classList.toggle('active')
+
+      window.addEventListener('click', () => {
+        event.target.classList.remove('active')
+        ref.current?.classList.remove('active')
+        dark.current?.classList.remove('active')
+      })
+    }
+
+    useEffect(() => {
+      if (window.innerWidth < 540) {
+        setChangeLogo(true)
+      } else {
+        setChangeLogo(false)
+      }
+      
+    }, [])
+    
 
   return (
     <>
@@ -63,7 +106,7 @@ export default function index({children}: Props) {
               <>
                 <div className="group">
                   <h2 className="logo">
-                    <A href="/" text="Berikbol shop" />
+                    <A href="/" text={changeLogo ? "BS" : "Berikbol shop"} />
                   </h2>
                   <Button type="primary">
                     <A href="/posts" text="Posts" />
@@ -80,7 +123,7 @@ export default function index({children}: Props) {
                       email = {profile.email}
                       address = {profile.address}
                     />
-                    <div className="group">
+                    <div className="group __dropdown" ref={ref} onClick={(event)=>event.stopPropagation()} >
                       <Button
                        type="primary" 
                        icon={<ShoppingCartOutlined />}
@@ -106,9 +149,15 @@ export default function index({children}: Props) {
                     <A href="/Login" text="Log in" />
                   </Button>
                 )}
+                <div onClick={(event)=>burger(event)} className="burger__group">
+                  <div className="line"></div> 
+                  <div className="line"></div> 
+                  <div className="line"></div> 
+                </div>
               </>
             </Container>
           </div>
+          <div className="modal__dark" ref={dark} />
           {children}
         </>
       </Container>

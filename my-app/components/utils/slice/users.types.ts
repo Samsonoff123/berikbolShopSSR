@@ -12,7 +12,7 @@ export interface IUsers {
     id: number,
     email: string,
     username: string,
-    password: string,
+    password: null,
     name: {
         firstname: string,
         lastname: string,

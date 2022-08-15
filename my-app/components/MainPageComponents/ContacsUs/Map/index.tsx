@@ -1,0 +1,7 @@
+import React from 'react'
+
+export default function index() {
+  return (
+    <div><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d67362.40470239475!2d71.52002825410113!3d51.13852141302971!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sru!2skz!4v1660561468252!5m2!1sru!2skz" width="450" height="450" style={{border:0}} loading="lazy"></iframe></div>
+  )
+}

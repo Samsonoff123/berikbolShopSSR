@@ -1,19 +1,46 @@
-import { Button } from 'antd'
-import type { NextPage } from 'next'
-import Container from '../components/Container/index'
-import Header from '../components/Header/index'
-import { userAPI } from '../components/utils/slice/userService'
+import Container from "../components/Container/index";
+import Header from "../components/Header/index";
+import Slider from '../components/MainPageComponents/Slider'
+import ContactForm from '../components/MainPageComponents/ContacsUs'
+import OurProducts from '../components/MainPageComponents/OurProducts'
+import Footer from '../components/MainPageComponents/Footer'
 
-const Home: NextPage = () => {
+
+const contentStyle: React.CSSProperties = {
+  height: "160px",
+  color: "#fff",
+  lineHeight: "160px",
+  textAlign: "center",
+  background: "#364d79",
+};
+
+const Home = ({products}:any) => {
+  
   return (
     <>
       <Header>
-        <Container>
-          <Button type="primary">Main Page</Button>
-        </Container>
+          <></>
       </Header>
+      <Slider />
+      <Container>
+        <>
+        <OurProducts products={products} />
+        <ContactForm />
+        </>
+      </Container>
+      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
+
+export const getStaticProps = async () => {
+  const res = await fetch("https://fakestoreapi.com/products");
+  const products = await res.json();
+
+  return {
+    props: { products },
+  };
+
+};

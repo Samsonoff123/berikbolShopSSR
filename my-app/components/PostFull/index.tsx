@@ -15,7 +15,7 @@ export default function index ({product, value} :any) {
 
   return (
     (product.category == value) 
-        ?<div className="postMain" key={product.id}>
+        ?<div className="postMain">
         <div className="img__div">
             { isExistInCart? <span className='allready'>Уже в корзине</span> :<ShoppingCartOutlined onClick={()=>addItem(product)} />}
             <div className="price">{product.price} <DollarCircleOutlined /></div>

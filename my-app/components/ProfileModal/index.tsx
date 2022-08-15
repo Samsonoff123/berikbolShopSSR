@@ -19,6 +19,7 @@ type Props = {
 export default function index({isModalVisible, handleCancel, userFLName, username, email, address }: Props) {
 
   return (
+    <React.StrictMode>
     <Modal title="Profile" visible={isModalVisible} onCancel={handleCancel} footer={[ <Button type="primary" onClick={handleCancel}>Cancel</Button> ]}>
         <div className="profile__group">
             <p><b>FirstName:</b> {userFLName.firstname}</p>
@@ -33,5 +34,6 @@ export default function index({isModalVisible, handleCancel, userFLName, usernam
         <p><b>City:</b> {address.city}</p>
         <p><b>Number:</b> {address.number}</p>
     </Modal>
+    </React.StrictMode>
   )
 }

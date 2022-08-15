@@ -2,59 +2,48 @@ import React, { useRef } from "react";
 import Header from "../components/Header/index";
 import { Button, Checkbox, Form, Input } from "antd";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { fetchAuth } from "../components/utils/slice/authSlice";
 
 type Props = {
-    users: any;
-}
+  users: any;
+};
 
 interface FilterUsers {
-    email: string,
-    password: string,
+  email: string;
+  password: string;
 }
-  
-  interface FiltersProps {
-    filters: FilterUsers[];
-  }
 
-export default function Login({users}:Props) {
+interface FiltersProps {
+  filters: FilterUsers[];
+}
 
-    const router = useRouter()
-    const ref = useRef<HTMLHeadingElement>(null);
+export default function Login({ users }: Props) {
+  const dispatch = useDispatch()
+  const router = useRouter();
+  const ref = useRef<HTMLHeadingElement>(null);
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-    let valid = 0
-    users.map((e: FilterUsers, id: number) => {
-        if(e.email === values.username) {
-            if(e.password === values.password) {
-                localStorage.setItem('id', id.toString())
-                router.push('/')
+  const onFinish = async (values: any) => {
+    const data = await dispatch(fetchAuth({
+      username: values.username,
+      password: values.password,
+    }))
 
-                valid = 0
-            }
-        } else {
-          valid++
-        }
-    })
-    if (valid === users.length) {
-      if(ref.current) {
-        ref.current.style.border = "1px solid red" 
-        alert('Access denied!')
-      }   
+    if (data.payload) {
+      localStorage.setItem('token', data.payload.token)
+      router.push('/')
     } else {
-      if(ref.current) {
-        ref.current.style.border = "none" 
-      } 
+      alert("Login denied!")
     }
-  
   };
+
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
   return (
     <Header>
-      <div className="form" ref = { ref }>
+      <div className="form" ref={ref}>
         <h3>Login</h3>
         <Form
           name="basic"
@@ -101,10 +90,10 @@ export default function Login({users}:Props) {
 }
 
 export const getStaticProps = async () => {
-    const res = await fetch("https://fakestoreapi.com/users");
-    const users = await res.json();
-  
-    return {
-      props: { users },
-    };
+  const res = await fetch("https://fakestoreapi.com/users");
+  const users = await res.json();
+
+  return {
+    props: { users },
+  };
 };

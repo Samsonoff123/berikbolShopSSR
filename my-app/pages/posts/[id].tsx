@@ -1,9 +1,10 @@
-import { useRouter } from 'next/router';
-import Header from '../../components/Header'
-import A from '../../components/A'
-import React from 'react'
-import { Rate } from 'antd';
+import { useRouter } from "next/router";
+import Header from "../../components/Header";
+import A from "../../components/A";
+import React from "react";
+import { Rate } from "antd";
 import { DollarCircleOutlined } from "@ant-design/icons";
+import Footer from "../../components/MainPageComponents/Footer";
 
 type Props = {
   category: string;
@@ -16,34 +17,45 @@ type Props = {
     rate: number;
   };
   title: string;
-}
+};
 
-export default function ({products}: any ) {
-  const { query } = useRouter()
+export default function ({ products }: any) {
+  const { query } = useRouter();
   console.log(products);
-  
+
   return (
-    <Header>
-      <>
-        <div className="breadcrumbs"><span>/<A href="/posts" text="posts" />/{products.id}</span></div>
-        <div className='detail__main'>
-          <img src={products.image} alt="detailIMG" />
-          <div className="discribtion">
-            <div className="title"><b>{products.title}</b></div>
-            <div className='text'>{products.description}</div>
-            <Rate allowHalf defaultValue={products.rating.rate} />
-            <div className="price"><DollarCircleOutlined /> {products.price }</div>
+    <>
+      <Header>
+        <>
+          <div className="breadcrumbs">
+            <span>
+              /<A href="/posts" text="posts" />/{products.id}
+            </span>
           </div>
-        </div>
-      </>
-    </Header>
-  )
+          <div className="detail__main">
+            <img src={products.image} alt="detailIMG" />
+            <div className="discribtion">
+              <div className="title">
+                <b>{products.title}</b>
+              </div>
+              <div className="text">{products.description}</div>
+              <Rate allowHalf defaultValue={products.rating.rate} />
+              <div className="price">
+                <DollarCircleOutlined /> {products.price}
+              </div>
+            </div>
+          </div>
+        </>
+      </Header>
+      <Footer />
+    </>
+  );
 }
 
-export  const getServerSideProps = async ({params}:any) => {
-  const res = await fetch(`https://fakestoreapi.com/products/${params.id}`)
-  const products = await res.json()
-  return ({
-      props: { products },
-  })
+export const getServerSideProps = async ({ params }: any) => {
+  const res = await fetch(`https://fakestoreapi.com/products/${params.id}`);
+  const products = await res.json();
+  return {
+    props: { products },
+  };
 };
